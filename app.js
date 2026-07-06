@@ -1,21 +1,21 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./database");
+const bookroutes=require('./routes/bookroutes')
 
 dotenv.config();
 
 const app = express();
 
-// Connect Database
+
 connectDB();
 
-// Middleware
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-///port
 
-app.use("/api", require("./routes/bookroutes"));
+app.use("/api", bookroutes);
 
 const PORT = process.env.PORT || 3000;
 
