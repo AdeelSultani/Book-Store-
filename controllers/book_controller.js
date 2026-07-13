@@ -155,10 +155,49 @@ const deleteBook = async (req, res) => {
     }
 };
 
+//pagination
+const allbookspagination = async (req, res) => {
+    try {
+
+        // Current page (default = 1)
+        const page = parseInt(req.query.page) || 1;
+
+        // Number of records per page (default = 10)
+        const limit = parseInt(req.query.limit) || 10;
+
+        // Calculate how many records to skip
+        const skip = (page - 1) * limit;
+
+        // Get paginated books
+        const books = await Book.find()
+            .skip(skip)
+            .limit(limit);
+
+        // Total number of books
+        const totalBooks = await Book.countDocuments();
+
+        res.status(200).json({
+            success: true,
+            currentPage: page,
+            totalPages: Math.ceil(totalBooks / limit),
+            totalBooks: totalBooks,
+            data: books
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+};
 module.exports = {
     createBook,
     allbooks,
     bookbyid,
     updateBook,
-    deleteBook
+    deleteBook,
+    allbookspagination
 };
